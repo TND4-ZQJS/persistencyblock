@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Persistency Block Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Apple-like clean styling */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #f9f9f9;
+      color: #111;
+      margin: 0;
+      padding: 2rem;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    h1 {
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    label {
+      font-size: 1rem;
+      display: block;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="month"] {
+      font-size: 1rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 300px;
+      box-sizing: border-box;
+    }
+
+    #results {
+      margin-top: 2rem;
+      background-color: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 0.8rem;
+      font-size: 1rem;
+    }
+
+    strong {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Persistency Block Calculator</h1>
+
+  <label for="closingMonth">Select Closing Month:</label>
+  <input type="month" id="closingMonth">
+
+  <div id="results"></div>
+
+  <script>
+    function formatMonthYear(date) {
+      return date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    }
+
+    function getRange(closing, fromOffset, toOffset) {
+      const start = new Date(closing);
+      const end = new Date(closing);
+      start.setMonth(start.getMonth() + fromOffset);
+      end.setMonth(end.getMonth() + toOffset);
+      return `${formatMonthYear(start)} - ${formatMonthYear(end)}`;
+    }
+
+    document.getElementById("closingMonth").addEventListener("change", function () {
+      const inputValue = this.value;
+      if (!inputValue) return;
+
+      const [year, month] = inputValue.split('-').map(Number);
+      const closingDate = new Date(year, month - 1);
+
+      const resultHTML = `
+        <h2>Blocks for ${formatMonthYear(closingDate)}</h2>
+        <ul>
+          <li><strong>12-month:</strong> ${getRange(closingDate, -24, -13)}</li>
+          <li><strong>13-month:</strong> ${getRange(closingDate, -25, -14)}</li>
+          <li><strong>24-month:</strong> ${getRange(closingDate, -36, -25)}</li>
+          <li><strong>25-month:</strong> ${getRange(closingDate, -37, -26)}</li>
+        </ul>
+      `;
+      document.getElementById("results").innerHTML = resultHTML;
+    });
+  </script>
+
+</body>
+</html>
